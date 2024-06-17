@@ -81,6 +81,19 @@ const createMainWin = () => {
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
+  mainWin.on("resize", () => {
+    if (mainView) {
+      let [width, height] = mainWin.getSize()
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+    }
+  });
+  mainWin.on("unmaximize", () => {
+    if (mainView) {
+      let [width, height] = mainWin.getSize()
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+    }
+  });
+
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
@@ -130,6 +143,7 @@ const createMainWin = () => {
       // readerWindow && readerWindow.destroy();
       // readerWindow = null;
     });
+
 
     event.returnValue = "success";
   });
