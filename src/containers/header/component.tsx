@@ -11,9 +11,6 @@ import { isElectron } from "react-device-detect";
 import { syncData } from "../../utils/syncUtils/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { checkStableUpdate } from "../../utils/commonUtil";
-import packageInfo from "../../../package.json";
-
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -53,16 +50,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           StorageUtil.getReaderConfig("storageLocation")
         );
       }
-      try {
-        let stableLog = await checkStableUpdate();
-        if (packageInfo.version.localeCompare(stableLog.version) > 0) {
-          this.setState({ isDeveloperVer: true });
-          // this.props.handleFeedbackDialog(true);
-          // return;
-        }
-      } catch (error) {
-        console.log(error);
+
+      if (StorageUtil.getReaderConfig("appInfo") === "dev") {
+        this.setState({ isDeveloperVer: true });
       }
+
       //Check for data update
       let storageLocation = localStorage.getItem("storageLocation")
         ? localStorage.getItem("storageLocation")
