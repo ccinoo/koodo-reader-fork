@@ -4,12 +4,14 @@ import { FeedbackDialogProps, FeedbackDialogState } from "./interface";
 import toast from "react-hot-toast";
 import "./feedbackDialog.css";
 import packageInfo from "../../../../package.json";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
+import JSZip from "jszip";
 import {
   checkDeveloperUpdate,
   getUploadUrl,
+  sendFeedback,
   uploadFile,
-} from "../../../utils/commonUtil";
+} from "../../../utils/request/common";
 declare var window: any;
 class FeedbackDialog extends Component<
   FeedbackDialogProps,
@@ -74,7 +76,6 @@ class FeedbackDialog extends Component<
     let version = packageInfo.version;
     const os = window.require("os");
     const system = os.platform() + " " + os.version();
-    const axios = window.require("axios");
     let fileName = "";
     if (this.state.fileContent && this.state.uploadUrl) {
       var segments = this.state.uploadUrl.split("/").reverse()[0];
@@ -88,19 +89,9 @@ class FeedbackDialog extends Component<
       email,
       assets: fileName,
     });
+    let result = await sendFeedback(data);
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://api.960960.xyz/api/feedback",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    let res = await axios.request(config);
-    if (res.data.result !== "ok") {
+    if (result !== "ok") {
       toast.error(this.props.t("Error happened"));
       this.setState({ isSending: false });
       return;
@@ -191,7 +182,7 @@ class FeedbackDialog extends Component<
                   toast.error("Empty files");
                 }
                 let files: any = event.target.files;
-                let zip = new window.JSZip();
+                let zip = new JSZip();
                 for (let index = 0; index < files.length; index++) {
                   const file = files[index];
                   var fileSize = file.size;
