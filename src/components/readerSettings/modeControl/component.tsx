@@ -12,15 +12,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   }
 
   handleChangeMode = (mode: string) => {
-    if (
-      this.props.currentBook.format === "PDF" ||
-      this.props.currentBook.format.startsWith("CB")
-    ) {
-      ConfigService.setReaderConfig("pdfReaderMode", mode);
-    } else {
-      ConfigService.setReaderConfig("readerMode", mode);
-    }
-
+    ConfigService.setReaderConfig("readerMode", mode);
     this.props.handleReaderMode(mode);
     BookUtil.reloadBooks();
   };
@@ -44,22 +36,16 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
             <span className="icon-single-page single-page-icon"></span>
           </div>
 
-          {this.props.currentBook &&
-            this.props.currentBook.format &&
-            this.props.currentBook.format !== "PDF" &&
-            !this.props.currentBook.format.startsWith("CB") && (
-              <div
-                className="double-mode-container"
-                onClick={() => {
-                  this.handleChangeMode("double");
-                }}
-                style={
-                  this.props.readerMode === "double" ? {} : { opacity: 0.4 }
-                }
-              >
-                <span className="icon-two-page two-page-icon"></span>
-              </div>
-            )}
+          <div
+            className="double-mode-container"
+            onClick={() => {
+              this.handleChangeMode("double");
+            }}
+            style={this.props.readerMode === "double" ? {} : { opacity: 0.4 }}
+          >
+            <span className="icon-two-page two-page-icon"></span>
+          </div>
+
           <div
             className="double-mode-container"
             onClick={() => {
