@@ -27,6 +27,11 @@ let dbConnection = {};
 let syncUtilCache = {};
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
+fs.writeFileSync(
+  path.join(dirPath, "log1.json"),
+  JSON.stringify({ filePath: JSON.stringify(process.argv) }),
+  "utf-8"
+);
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
