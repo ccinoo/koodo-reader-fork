@@ -29,12 +29,17 @@ const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 fs.writeFileSync(
   path.join(dirPath, "log1.json"),
-  JSON.stringify({ filePath: JSON.stringify(process.argv) }),
+  JSON.stringify({ filePath: JSON.stringify(process.argv), singleInstance: singleInstance }),
   "utf-8"
 );
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
+fs.writeFileSync(
+  path.join(dirPath, "log2.json"),
+  JSON.stringify({ filePath }),
+  "utf-8"
+);
 let options = {
   width: 1050,
   height: 660,
@@ -599,6 +604,19 @@ const createMainWin = () => {
       if (_data && _data.filePath) {
         filePath = _data.filePath;
         fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
+      }
+    }
+
+    event.returnValue = filePath;
+    filePath = null;
+  });
+  ipcMain.on("check-file-data", function (event) {
+    if (fs.existsSync(path.join(dirPath, "log.json"))) {
+      const _data = JSON.parse(
+        fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
+      );
+      if (_data && _data.filePath) {
+        filePath = _data.filePath;
       }
     }
 
