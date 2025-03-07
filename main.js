@@ -62,6 +62,10 @@ if (!singleInstance) {
   });
 }
 if (filePath) {
+  // Make sure the directory exists
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
   fs.writeFileSync(
     path.join(dirPath, "log.json"),
     JSON.stringify({ filePath }),
