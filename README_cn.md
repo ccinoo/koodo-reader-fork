@@ -48,6 +48,7 @@
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** ，**安卓** ，**iOS** 和 **网页版**
 - 利用 **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **阿里云盘**, **Box**, **FTP**, **SFTP**, **WebDAV**, **对象存储** 实现数据多端同步和备份
+- AI 翻译，AI 词典，AI 总结
 - 双页模式，单页模式，滚动模式
 - 听书功能，翻译功能，词典功能，触控屏支持，批量导入图书
 - 支持目录，书签，笔记，高亮，书架，标签
@@ -60,6 +61,8 @@
   - 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
   - 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
 - 网页版：[前往](https://web.koodoreader.com)
+- 安卓版：[前往](https://koodoreader.com/zh/download)
+- iOS 版：[前往](https://koodoreader.com/zh/download)
 - 使用 Scoop 安装：
 
 ```shell
