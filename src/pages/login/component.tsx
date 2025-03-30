@@ -64,6 +64,10 @@ class Login extends React.Component<LoginProps, LoginState> {
     if (res.code === 200) {
       this.props.handleLoadingDialog(false);
       toast.success(this.props.t("Login successful"));
+      ConfigService.removeItem("defaultSyncOption");
+      ConfigService.removeItem("dataSourceList");
+      this.props.handleFetchDataSourceList();
+      this.props.handleFetchDefaultSyncOption();
       removeSearchParams();
       this.props.handleFetchAuthed();
       this.setState({ currentStep: 3 });
@@ -654,11 +658,11 @@ class Login extends React.Component<LoginProps, LoginState> {
                   >
                     {this.props.t("Log in")}
                   </div>
-                  <div className="login-term" style={{ opacity: 0.8 }}>
+                  {/* <div className="login-term" style={{ opacity: 0.8 }}>
                     {this.props.t(
                       "Due to the limited number of emails we can send each day, to prevent login issues after reaching the sending limit, please make sure to add additional login options as backups after logging in."
                     )}
-                  </div>
+                  </div> */}
                   <div className="login-term">
                     {this.props.t("Supported email providers")}
                     <br />
