@@ -149,14 +149,19 @@ class BookUtil {
   }
   static async redirectBook(book: BookModel) {
     if (
-      !(await this.isBookExist(book.key, book.format.toLowerCase(), book.path))
+      !(await this.isBookExist(
+        book.key,
+        book.format.toLowerCase(),
+        book.path
+      )) &&
+      !(await this.isBookExist("cache-" + book.key, "zip", book.path))
     ) {
       if (
         ConfigService.getItem("defaultSyncOption") &&
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
-        toast.loading(i18n.t("Make it offline"), {
+        toast.loading(i18n.t("Downloading"), {
           id: "offline-book",
         });
         let result = await this.downloadBook(book.key, book.format);
@@ -170,17 +175,17 @@ class BookUtil {
           }
         }
         if (result) {
-          toast.success(i18n.t("Offline successful"), {
+          toast.success(i18n.t("Download successful"), {
             id: "offline-book",
           });
         } else {
           let result = await this.downloadCacheBook(book.key);
           if (result) {
-            toast.success(i18n.t("Offline successful"), {
+            toast.success(i18n.t("Download successful"), {
               id: "offline-book",
             });
           } else {
-            toast.error(i18n.t("Offline failed"), {
+            toast.error(i18n.t("Download failed"), {
               id: "offline-book",
             });
             if (ConfigService.getItem("defaultSyncOption") === "adrive") {
@@ -362,6 +367,9 @@ class BookUtil {
     }
   }
   static async uploadBook(key: string, format: string) {
+    if (key.startsWith("cache")) {
+      return;
+    }
     let isAuthed = await TokenService.getToken("is_authed");
     if (isAuthed !== "yes") {
       return;
@@ -425,8 +433,12 @@ class BookUtil {
   static async deleteCacheBook(key: string) {
     await this.deleteBook("cache-" + key, "zip");
   }
-  static async offlineBook(key: string, _format: string) {
-    await this.downloadCacheBook(key);
+  static async offlineBook(key: string, format: string) {
+    let result = await this.downloadBook(key, format);
+    if (!result) {
+      result = await this.downloadCacheBook(key);
+    }
+    return result;
   }
   static async deleteOfflineBook(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
