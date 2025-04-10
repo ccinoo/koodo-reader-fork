@@ -59,7 +59,8 @@ class OperationPanel extends React.Component<
       HtmlMouseEvent(
         this.props.htmlBook.rendition,
         this.props.currentBook.key,
-        this.props.readerMode
+        this.props.readerMode,
+        this.props.currentBook.format
       );
     });
   }
@@ -109,7 +110,7 @@ class OperationPanel extends React.Component<
 
     let cfi = JSON.stringify(bookLocation);
     if (!text) {
-      text = this.props.htmlBook.rendition.visibleText().join(" ");
+      text = await this.props.htmlBook.rendition.visibleText().join(" ");
     }
     text = text
       .replace(/\s\s/g, "")
