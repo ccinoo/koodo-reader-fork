@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.9.4",
+  "version": "1.9.5",
   "description": "Koodo Reader is a cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -217,6 +217,13 @@
       ]
     },
     "mac": {
+      "darkModeSupport": true,
+      "entitlements": "assets/macos/entitlements.mac.plist",
+      "entitlementsInherit": "assets/macos/entitlements.mac.plist",
+      "identity": "Liang Guo",
+      "gatekeeperAssess": false,
+      "hardenedRuntime": true,
+      "notarize": true,
       "target": [
         {
           "target": "dmg",
