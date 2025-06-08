@@ -34,8 +34,8 @@ COPY --from=builder /app/httpServer.js /app/httpServer.js
 RUN mkdir -p /app/uploads && \
     chmod 755 /app/uploads
 
-# Expose both Caddy (80) and httpServer (8000) ports
-EXPOSE 80 8000
+# Expose both Caddy (80) and httpServer (8080) ports
+EXPOSE 80 8080
 
 # Create startup script to run both services
 RUN echo '#!/bin/sh' > /start.sh && \
@@ -47,20 +47,9 @@ RUN echo '#!/bin/sh' > /start.sh && \
 # Set default environment variables (can be overridden at runtime)
 ENV SERVER_USERNAME=admin
 ENV SERVER_PASSWORD=securePass123
-ENV PORT=8000
+ENV PORT=8080
 
 # Define volume for uploads directory
 VOLUME ["/app/uploads"]
 
 CMD ["/start.sh"]
-
-
-# docker run -d \
-#   --name koodo-reader \
-#   -p 80:80 \
-#   -p 8000:8000 \
-#   -e ENABLE_HTTP_SERVER=false \
-#   -e SERVER_USERNAME=admin \
-#   -e SERVER_PASSWORD=securePass123 \
-#   -v /path/to/host/uploads:/app/uploads \
-#   koodo-reader-test:latest
