@@ -27,6 +27,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
   addChatBox,
+  checkBrokenData,
   checkMissingBook,
   getChatLocale,
   getStorageLocation,
@@ -35,6 +36,8 @@ import {
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
+import { LocalFileManager } from "../../utils/file/localFile";
+declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
@@ -100,6 +103,23 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     } else {
       upgradeConfig();
+      const status = await LocalFileManager.getPermissionStatus();
+      if (
+        !ConfigService.getReaderConfig("isUseLocal") &&
+        LocalFileManager.isSupported()
+      ) {
+        this.props.handleLocalFileDialog(true);
+      } else if (
+        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        !status.directoryName
+      ) {
+        this.props.handleLocalFileDialog(true);
+      } else if (
+        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        (status.needsReauthorization || !status.hasAccess)
+      ) {
+        this.props.handleLocalFileDialog(true);
+      }
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
@@ -234,6 +254,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return false;
     }
     checkMissingBook(this.props.books);
+    let checkResult = await checkBrokenData();
+    if (checkResult) {
+      toast.error(
+        this.props.t(
+          "Broken data detected, please click the setting button to reset the sync records"
+        )
+      );
+      this.setState({ isSync: false });
+      return false;
+    }
     if (ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes") {
       toast.loading(
         this.props.t("Start syncing") +
@@ -352,7 +382,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return;
     }
     let compareResult = await this.getCompareResult();
-
     await this.handleSync(compareResult);
     this.setState({ isSync: false });
   };

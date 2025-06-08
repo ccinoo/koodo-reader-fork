@@ -25,10 +25,16 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       direction: "horizontal",
       desc: "",
       isHover: false,
+      cover: "",
+      isCoverExist: false,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      cover: await CoverUtil.getCover(this.props.book),
+      isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+    });
     let filePath = "";
     // Get file path from electron
     if (isElectron) {
@@ -47,13 +53,17 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       BookUtil.redirectBook(this.props.book);
     }
   }
-  UNSAFE_componentWillReceiveProps(nextProps: BookCoverProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps: BookCoverProps) {
     if (nextProps.book.key !== this.props.book.key) {
+      let cover = await CoverUtil.getCover(nextProps.book);
+      let isCoverExist = await CoverUtil.isCoverExist(nextProps.book);
       this.setState({
         isFavorite:
           ConfigService.getAllListConfig("favoriteBooks").indexOf(
             nextProps.book.key
           ) > -1,
+        cover,
+        isCoverExist,
       });
     }
   }
@@ -189,7 +199,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                   }
             }
           >
-            {!CoverUtil.isCoverExist(this.props.book) ||
+            {!this.state.isCoverExist ||
             (this.props.book.format === "PDF" &&
               ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div
@@ -206,7 +216,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               </div>
             ) : (
               <img
-                src={CoverUtil.getCover(this.props.book)}
+                src={this.state.cover}
                 alt=""
                 style={
                   this.state.direction === "horizontal" ||

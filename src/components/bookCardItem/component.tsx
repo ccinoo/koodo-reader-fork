@@ -23,10 +23,16 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       top: 0,
       direction: "horizontal",
       isHover: false,
+      cover: "",
+      isCoverExist: false,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      cover: await CoverUtil.getCover(this.props.book),
+      isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+    });
     let filePath = "";
     //open book when app start
     if (isElectron) {
@@ -46,13 +52,17 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       BookUtil.redirectBook(this.props.book);
     }
   }
-  UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
     if (nextProps.book.key !== this.props.book.key) {
+      let cover = await CoverUtil.getCover(nextProps.book);
+      let isCoverExist = await CoverUtil.isCoverExist(nextProps.book);
       this.setState({
         isFavorite:
           ConfigService.getAllListConfig("favoriteBooks").indexOf(
             nextProps.book.key
           ) > -1,
+        cover,
+        isCoverExist,
       });
     }
   }
@@ -155,7 +165,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                   }
             }
           >
-            {!CoverUtil.isCoverExist(this.props.book) ||
+            {!this.state.isCoverExist ||
             (this.props.book.format === "PDF" &&
               ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div className="book-item-image">
@@ -169,7 +179,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               </div>
             ) : (
               <img
-                src={CoverUtil.getCover(this.props.book)}
+                src={this.state.cover}
                 alt=""
                 className="book-item-image"
                 style={

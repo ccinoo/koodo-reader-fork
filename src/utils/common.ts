@@ -478,6 +478,7 @@ export const getDefaultTransTarget = (langList) => {
     zhTW: "Chinese",
     zhMO: "Chinese",
     ja: "Japanese",
+    uk: "Ukrainian",
     ko: "Korean",
     vi: "Vietnamese",
     th: "Thai",
@@ -535,6 +536,19 @@ export const checkMissingBook = (bookList: Book[]) => {
       fs.copyFileSync(book.path, expectedPath);
     }
   }
+};
+export const checkBrokenData = async () => {
+  let localSyncRecords = ConfigService.getAllSyncRecord();
+  let localBooks = Object.keys(localSyncRecords).filter(
+    (item) =>
+      item.startsWith("database.sqlite.books") &&
+      localSyncRecords[item].operation !== "delete"
+  );
+  let actualbooks = await DatabaseService.getAllRecords("books");
+  if (localBooks.length > 0 && actualbooks.length === 0) {
+    return true;
+  }
+  return false;
 };
 export const testConnection = async (driveName: string, driveConfig: any) => {
   toast.loading(i18n.t("Testing connection..."), {
