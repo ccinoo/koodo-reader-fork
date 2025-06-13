@@ -57,26 +57,31 @@
 
 ## 使用方法
 
-- 桌面端：
-  - 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
-  - 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
-- 网页版：[前往](https://web.koodoreader.com)
-- 安卓版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
-- iOS 版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
-- 使用 Scoop 安装：
+### 桌面端：
+
+- 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
+- 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
+
+### 网页版：[前往](https://web.koodoreader.com)
+
+### 安卓版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
+
+### iOS 版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
+
+### 使用 Scoop 安装：
 
 ```shell
 scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
-- 使用 Homebrew 安装：
+### 使用 Homebrew 安装：
 
 ```shell
 brew install --cask koodo-reader
 ```
 
-- 使用 Docker 安装：
+### 使用 Docker 安装：
 
 如果您只需要部署网页版，直接使用下面的命令即可
 
@@ -99,6 +104,8 @@ docker run -d \
 3. 将 **`/path/to/host/uploads`** 改为您希望用来保存阅读数据的文件夹
 
 部署完成后，在 Koodo Reader 中选择 **Docker** 作为数据源。
+
+数据源功能默认使用 8080 端口，网页版默认使用 80 端口，您也可以使用其他端口。如果您需要使用 8090 端口，则将 **`-p 8080:8080`** 改为 **`-p 8090:8080`**
 
 ## 截图
 

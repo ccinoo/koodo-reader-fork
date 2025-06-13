@@ -58,26 +58,31 @@
 
 ## Installation
 
-- Desktop Version:
-  - Stable Version (Recommended): [Download](https://koodoreader.com/en)
-  - Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
-- Web Version：[Preview](https://web.koodoreader.com)
-- Android Version (works with developer version)：[Download](https://koodoreader.com/en/download)
-- iOS Version (works with developer version)：[Download](https://koodoreader.com/en/download)
-- Install with Scoop:
+### Desktop Version:
+
+- Stable Version (Recommended): [Download](https://koodoreader.com/en)
+- Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
+
+### Web Version：[Visit](https://web.koodoreader.com)
+
+### Android Version (works with developer version)：[Download](https://koodoreader.com/en/download)
+
+### iOS Version (works with developer version)：[Download](https://koodoreader.com/en/download)
+
+### Install with Scoop:
 
 ```shell
 scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
-- Install with Homebrew:
+### Install with Homebrew:
 
 ```shell
 brew install --cask koodo-reader
 ```
 
-- Install with Docker:
+### Install with Docker:
 
 If you only need to deploy the web version, simply use the command below.
 
@@ -100,6 +105,8 @@ If you also want to enable the **data source feature**, please:
 3. Replace **`/path/to/host/uploads`** with the folder where you want to store reading data
 
 Then, select **Docker** as the data source in Koodo Reader.
+
+Data source functionality use port 8080, and web version use port 80 by default. If you want to switch to port 8090, just change **`-p 8080:8080`** to **`-p 8090:8080`**.
 
 ## Screenshot
 
