@@ -445,6 +445,10 @@ const createMainWin = () => {
     }
     return "pong";
   })
+  ipcMain.handle("toggle-auto-launch", async (event, config) => {
+    store.set("isAutoLaunch", config.isAutoLaunch);
+    return "pong";
+  })
 
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
@@ -715,7 +719,9 @@ app.on('open-url', (event, url) => {
   event.preventDefault();
   handleCallback(url);
 });
-
+app.setLoginItemSettings({
+  openAtLogin: store.get("isAutoLaunch") === "yes"
+})
 const handleCallback = (url) => {
   try {
     // 检查 URL 是否有效
