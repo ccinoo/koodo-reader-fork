@@ -267,14 +267,29 @@ class ImportDialog extends React.Component<
     try {
       let pickerUtil: any = await SyncService.getPickerUtil("google");
       await pickerUtil.remote.refreshToken();
-      console.log("Using Google Picker with access token:", pickerUtil.remote);
       this.googlePickerUtil = new GooglePickerUtil({
         accessToken: pickerUtil.remote.config.access_token,
         apiKey: "",
         appId: "1051055003225",
       });
 
-      await this.googlePickerUtil.createPicker(this.handlePickerCallback);
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.invoke("google-picker", {
+          url:
+            "https://dl.koodoreader.com/websites/google-picker.html?access_token=" +
+            pickerUtil.remote.config.access_token,
+        });
+        ipcRenderer.once("picker-finished", async (event: any, config: any) => {
+          if (config && config.action === "picked" && config.docs) {
+            for (const file of config.docs) {
+              await this.handleImportGoogleFile(file);
+            }
+          }
+        });
+      } else {
+        await this.googlePickerUtil.createPicker(this.handlePickerCallback);
+      }
     } catch (error) {
       console.error("Error creating Google Picker:", error);
       toast.error(this.props.t("Failed to open Google Picker"));
@@ -295,8 +310,6 @@ class ImportDialog extends React.Component<
   // 处理Google文件导入
   handleImportGoogleFile = async (googleFile: any) => {
     try {
-      const tokenConfig = await getCloudConfig("google");
-
       // 检查文件格式
       const fileExtension =
         "." + googleFile.name.split(".").pop()?.toLowerCase();
@@ -320,10 +333,6 @@ class ImportDialog extends React.Component<
 
       toast.dismiss("google-download-" + googleFile.id);
       await this.props.importBookFunc(file);
-
-      toast.success(
-        this.props.t("Successfully imported") + ": " + googleFile.name
-      );
     } catch (error) {
       console.error("Error importing Google file:", error);
       toast.error(this.props.t("Failed to import") + ": " + googleFile.name);
