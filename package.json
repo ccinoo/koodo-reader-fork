@@ -242,14 +242,6 @@
     "win": {
       "target": [
         {
-          "target": "appx",
-          "arch": [
-            "x64",
-            "arm64",
-            "ia32"
-          ]
-        },
-        {
           "target": "nsis",
           "arch": [
             "x64"
@@ -268,7 +260,7 @@
           ]
         }
       ],
-      "icon": "build/icon.ico",
+      "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}-${arch}-Win.${ext}"
     },
     "linux": {
