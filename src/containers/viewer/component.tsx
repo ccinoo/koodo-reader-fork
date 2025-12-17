@@ -85,7 +85,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleRenderBookFunc(this.handleRenderBook);
     let resizeTimer: NodeJS.Timeout;
     window.addEventListener("resize", (event) => {
-      console.log(event);
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         BookUtil.reloadBooks(this.props.currentBook);
@@ -226,7 +225,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return;
         }
       }
-
       let rendition = BookHelper.getRendition(
         result,
         {
@@ -257,7 +255,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 (item) => item.lang === ConfigService.getReaderConfig("lang")
               )?.value || "chi_sim",
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
-          serverRegion: getServerRegion(),
+          serverRegion:
+            ConfigService.getItem("serverRegion") === "china"
+              ? "china"
+              : "global",
           paraSpacingValue:
             ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
           titleSizeValue:

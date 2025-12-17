@@ -281,5 +281,13 @@ class ConfigUtil {
       }
     }
   }
+  static async isCloudEmpty() {
+    let syncDataStr = await this.downloadConfig("sync");
+    let syncData = JSON.parse(syncDataStr || "{}");
+    if (!syncData || Object.keys(syncData).length === 0) {
+      return true;
+    }
+    return false;
+  }
 }
 export default ConfigUtil;
