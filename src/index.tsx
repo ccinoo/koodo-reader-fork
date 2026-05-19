@@ -20,10 +20,11 @@ initSystemFont();
 migrateThemeConfig();
 applyCustomSystemCSS();
 applyAppBackgroundImage();
+const container = document.getElementById("root")!;
 ReactDOM.render(
   <Provider store={store}>
     <Router />
   </Provider>,
-  document.getElementById("root")
+  container
 );
 StyleUtil.applyTheme();
